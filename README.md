@@ -150,3 +150,47 @@ public:
 };
 ```
 
+##### 
+
+## 跳跃游戏
+
+#### 原版本
+
+```c++
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int length=nums.size();
+        vector<int> flag(length);
+        for(int i=0; i<length; ++i){
+            if(flag[i] || i==0 ) {for(int j=0; j<=nums[i] && j+i<length; ++j) flag[j+i]=1;continue;}
+            break;
+        }
+        for(int i=1; i<length; ++i){
+            if(flag[i]==0) return false;
+        }
+        return true;
+    }
+};
+```
+
+#### 新版本
+
+##### 最远可到达的点进行比较
+
+```c++
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+    int loc= 0;
+	for (int temp = 0; temp < nums.size(); ++temp)
+	{
+		if (temp > loc) return false;
+		loc = max(loc, temp + nums[temp]);
+        if (loc >=nums.size()) return true;
+	}
+	return true;
+    }
+};
+```
+

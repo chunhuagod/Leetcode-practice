@@ -194,3 +194,30 @@ public:
 };
 ```
 
+
+
+## 删除倒数第N个节点
+
+```c++
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *last_node=head;
+        ListNode *temp_node=head;
+        ListNode *prev_node=nullptr;
+        while(n-1){
+            --n;
+            last_node=last_node->next;
+        }
+        while(last_node->next){
+            prev_node=temp_node;
+            last_node=last_node->next;
+            temp_node=temp_node->next;
+        }
+        if(head==temp_node) return head->next;
+        prev_node->next=temp_node->next;
+        return head;
+    }
+};
+```
+

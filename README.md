@@ -323,3 +323,41 @@ public:
 };
 ```
 
+
+
+## 环形链表Ⅱ
+
+使用快慢指针进行解决（相遇点距起点距离必定为环大小的整数倍），从相遇点和起点分别开始再走，相遇时必定为环起点
+
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *slow=head;
+        ListNode *fast=head;
+        ListNode *res=head;
+        while(fast && fast->next){
+            fast=fast->next->next;
+            slow=slow->next;
+
+            if(fast==slow){
+                while(res != slow){
+                    slow=slow->next;
+                    res=res->next;
+                }
+                return res;
+            }
+        }
+        return nullptr;
+    }
+};
+```
+

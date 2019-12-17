@@ -361,3 +361,29 @@ public:
 };
 ```
 
+
+
+## 两数相加
+
+```c++
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode *head= new ListNode(0);
+        ListNode *res=head;
+        int add_flag=0;
+        int val1,val2;
+        while(l1 || l2 || add_flag){
+            int val1=0,val2=0;
+            if(l1) {val1=l1->val;l1=l1->next;}
+            if(l2) {val2=l2->val;l2=l2->next;}
+            ListNode *tempNode=new ListNode((add_flag+val1+val2)%10);
+            head->next=tempNode;
+            head=head->next;
+            add_flag=(add_flag+val1+val2)/10;
+        }
+        return res->next;
+    }
+};
+```
+

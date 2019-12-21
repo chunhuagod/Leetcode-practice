@@ -436,3 +436,31 @@ public:
 };
 ```
 
+
+
+## 最大回文
+
+```c++
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int length=2*s.size();
+        int max_size=0;
+        string res;
+        for(int index=1; index<length; ++index){
+            int temp_shift=0;
+            while(index-temp_shift>=0 && index+temp_shift<=length){
+                if((index-(temp_shift))%2==0 || s[(index-(temp_shift))/2]==s[(index+(temp_shift))/2]) {++temp_shift;continue;}
+                break;
+            }
+            --temp_shift;
+            if(temp_shift>max_size){
+                max_size=temp_shift;
+                res=s.substr((index-temp_shift)/2,temp_shift);
+            }
+        }
+        return res;        
+    }
+};
+```
+

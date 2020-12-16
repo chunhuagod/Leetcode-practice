@@ -438,7 +438,11 @@ public:
 
 
 
-## 最大回文
+## 最大回文子串
+
+Manacher算法 O(N)复杂度寻找最长回文子串
+
+ Given a string `s`, return *the longest palindromic substring* in `s`. 
 
 ```c++
 class Solution {
@@ -460,6 +464,53 @@ public:
             }
         }
         return res;        
+    }
+};
+```
+
+## 树
+
+### 遍历
+
+#### 题目：
+
+ 给定一个二叉树，将它展开为一个单链表。 
+
+[Leedcode链接]: https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/
+
+
+
+#### 代码：
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        static vector<TreeNode*> vec;
+        if (root == nullptr) return;
+        TreeNode* left=root->left;
+        TreeNode* right=root->right;
+        root->left=nullptr;
+        if(left){
+            root->right=left;
+            if(right) vec.push_back(right);
+        }
+        while(root->left==nullptr && root->right==nullptr && vec.size()){
+            root->right=vec.back();
+            vec.pop_back();
+        }
+        flatten(root->right);
     }
 };
 ```

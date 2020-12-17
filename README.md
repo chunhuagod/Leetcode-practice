@@ -476,10 +476,6 @@ public:
 
  给定一个二叉树，将它展开为一个单链表。 
 
-[Leedcode链接]: https://leetcode-cn.com/problems/flatten-binary-tree-to-linked-list/
-
-
-
 #### 代码：
 
 ```c++
@@ -513,5 +509,38 @@ public:
         flatten(root->right);
     }
 };
+```
+
+## 动态规划
+
+#### 题目：[最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
+
+##### 问题描述：
+
+ 给定一个整数数组 `nums` ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。题目的问题是求解以下问题
+$$
+\max_{StartIndex \leq i \leq EndIndex}{f(i)}
+$$
+ f(i)表示以node i结尾的最大子序列和。在遍历至元素i+1时，
+$$
+f(i+1)=\max\{f(i)+nums[i+1],nums[i+1]\}
+$$
+最后引入个变量来记录最优的f(i)即可
+
+##### 解题思路：
+
+题目要求实现一个O(N)算法，因此不能使用暴力的进行求解。因此目标是一次遍历就寻找出最优的解。
+
+##### 代码：
+
+```c++
+int maxSubArray(vector<int>& nums) {
+    int pre = 0, maxres = nums[0];
+    for (const auto &x: nums) {
+        pre = max(pre + x, x);
+        maxres = max(maxres, pre);
+    }
+    return maxres;
+}
 ```
 

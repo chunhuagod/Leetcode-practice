@@ -607,6 +607,39 @@ int maxSubArray(vector<int>& nums) {
 }
 ```
 
+#### 题目：[零钱兑换](https://leetcode-cn.com/problems/coin-change/)
+
+##### 问题描述：
+
+给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1
+
+##### 解题思路：
+
+标准的动态规划解法，采用自下而上的方法解决
+
+##### 代码
+
+```c++
+int coinChange(vector<int>& coins, int amount) {
+    vector<int> res(amount+1,-1);
+    int length=coins.size();
+    res[0]=0;
+    for(int i{0};i<amount+1;++i){
+        if(res[i]==-1) continue;
+        for(int j{0};j<length;++j){
+            if(coins[j]>= 1e4) continue;
+            int targetIndex=i+coins[j];
+            if(targetIndex >amount) continue;
+            else if (res[targetIndex]==-1 || res[targetIndex]>res[i]+1)
+                res[targetIndex]=res[i]+1;
+        }
+    }
+    return res[amount];
+}
+```
+
+
+
 ## 数组
 
 #### 题目：[ 除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)

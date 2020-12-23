@@ -329,7 +329,70 @@ public:
 
 
 
-## 环形链表Ⅱ
+## 链表
+
+### 单向链表
+
+#### 题目：[相交链表](https://leetcode-cn.com/problems/intersection-of-two-linked-lists/)
+
+##### 题目描述：
+
+编写一个程序，找到两个单链表相交的起始节点。
+
+##### 题目要求：
+
+- 如果两个链表没有交点，返回 nullptr
+- 在返回结果后，两个链表仍须保持原有的结构
+- 可假定整个链表结构中没有循环
+- 程序尽量满足 O(n) 时间复杂度，且仅用 O(1) 内存
+
+##### 解题思路：
+
+首先介绍暴力方法，题目要求查找两个单链表的相交的起始节点，直观上，我们利用set容器存入链表中各个节点的信息，该容器可以用来判断节点出现的情况，然后遍历另外一条链表中节点判断是否出现过即可。这种方式可以满足O(m+n)的时间复杂度，但不能满足O(1)的内存需求。
+
+其次介绍更为精妙的方法，两条链表如果相同长度的情况下，如何判断是否两条单链表相交的起始点，方法很简单，通过双指针法即可。具体如下，定义两个指针分别指向两个head，然后不断判断是否相等，不断向后走即可。但是该题目中，两条链表不是相同长度，解决了该问题，那问题就非常简单。如果我们把两条链表连起来（不是真正的连，只是到尾部时，跳转到另外一条链表的头部），那长度就是相同的了，并且通过这种找到的节点也是相交起始点，因为相交的部分与原问题完全相同。具体实现方法是定义双指针，指向两条链表的头部，然后比较，同步后移，只是每条到达底部时跳转至另外的头部（每个指针只跳转一次即可），继续比较，后移。
+
+##### 代码：
+
+暴力方法：
+
+```c++
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+    ListNode * res=nullptr;
+    unordered_set<ListNode *> _ptrset;
+    while(headA){
+        _ptrset.emplace(headA);
+        headA=headA->next;
+    }
+    while(headB){
+        auto _findIter=_ptrset.find(headB);
+        if(_findIter != _ptrset.end()) {res=*_findIter;break;}
+        headB=headB->next;
+    }
+    return res;
+}
+```
+
+ 双指针方法：
+
+```c++
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+ListNode *ptrA=headA,*ptrB=headB;
+int flagA=1,flagB=1;
+while(ptrA && ptrB && ptrA!=ptrB){
+ptrA=(ptrA->next==nullptr && flagA--)? headB:ptrA->next;
+ptrB=(ptrB->next==nullptr && flagB--)? headA:ptrB->next;
+}
+if(ptrA==ptrB) return ptrA;
+else return nullptr;
+}
+```
+
+
+
+### 环形链表
+
+#### 环形链表
 
 使用快慢指针进行解决（相遇点距起点距离必定为环大小的整数倍），从相遇点和起点分别开始再走，相遇时必定为环起点
 
@@ -558,9 +621,8 @@ int maxSubArray(vector<int>& nums) {
 
 ##### 要求：
 
- 1.不要使用除法，在 O(*n*) 时间复杂度内完成
-
- 2.在常数空间复杂度内完成？（ 出于对空间复杂度分析的目的，**输出数组不被视为**额外空间。）
+-  不要使用除法，在 O(*n*) 时间复杂度内完成
+- 在常数空间复杂度内完成？（ 出于对空间复杂度分析的目的，**输出数组不被视为**额外空间。）
 
 ##### 解题思路：
 

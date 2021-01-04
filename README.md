@@ -702,7 +702,6 @@ numberOfUnitsPerBoxi 是类型 i 每个箱子可以装载的单元数量。
 返回卡车可以装载 单元 的 最大 总数。
 
 来源：力扣（LeetCode）
-链接：https://leetcode-cn.com/problems/maximum-units-on-a-truck
 
 ##### 题目思路：
 
@@ -736,7 +735,6 @@ int maximumUnits(vector<vector<int>>& boxTypes, int truckSize) {
 注意，只要餐品下标不同，就可以认为是不同的餐品，即便它们的美味程度相同。
 
 来源：力扣（LeetCode）
-链接：https://leetcode-cn.com/problems/count-good-meals
 
 ##### 题目思路：
 
@@ -762,6 +760,126 @@ int countPairs(vector<int>& deliciousness) {
     }
     ans %= MOD;
     return ans;
+}
+```
+
+#### 第三题：[ 将数组分成三个子数组的方案数](https://leetcode-cn.com/problems/ways-to-split-array-into-three-subarrays/)
+
+##### 题目描述：
+
+我们称一个分割整数数组的方案是 好的 ，当它满足：
+
+数组被分成三个 非空 连续子数组，从左至右分别命名为 left ， mid ， right 。
+left 中元素和小于等于 mid 中元素和，mid 中元素和小于等于 right 中元素和。
+给你一个 非负 整数数组 nums ，请你返回 好的 分割 nums 方案数目。由于答案可能会很大，请你将结果对 109 + 7 取余后返回。
+
+来源：力扣（LeetCode）
+
+##### 题目思路：
+
+利用遍历的方式确定左边界，利用二分法确定右边界的范围（由于右边范围移动是单调的，所以可以用二分法）。
+
+##### 代码：
+
+```c++
+int waysToSplit(vector<int>& nums) {
+    int length=nums.size();
+    const int mod=1e9+7;
+    vector<int> _vec(length+1,0);//for [0->i-1]元素求和
+    for(int i{1};i<=length;++i){
+        _vec[i]=_vec[i-1]+nums[i-1];
+    }
+    int res=0;
+    for(int L_index{1};L_index<length-1;++L_index){
+        if(_vec[L_index]*3>_vec[length]) break;
+        //find maxR_index 让其满足 right>mid
+        int ltemp=L_index+1,maxR_index=length-1;
+        while(ltemp<=maxR_index){
+            int mid=(ltemp+maxR_index)/2;
+            if(_vec[length]-_vec[mid]>=_vec[mid]-_vec[L_index]){
+                ltemp=mid+1;
+            }
+            else{
+                maxR_index=mid-1;
+            }
+        }
+        //find minL_index 让其满足 left<mid
+        int minL_index=L_index+1,rtemp=length-1;
+        while(minL_index<=rtemp){
+            int mid=(minL_index+rtemp)/2;
+            if(_vec[mid]-_vec[L_index]>=_vec[L_index]){
+                rtemp=mid-1;
+            }
+            else{
+                minL_index=mid+1;
+            }
+        }
+        res += maxR_index-minL_index+1;
+        res=res%mod;
+    }
+    return res;
+}
+```
+
+
+
+#### 第四题：[得到子序列的最少操作次数](https://leetcode-cn.com/problems/minimum-operations-to-make-a-subsequence/)
+
+##### 题目描述：
+
+给你一个数组 target ，包含若干互不相同 的整数，以及另一个整数数组 arr ，arr 可能 包含重复元素。
+
+每一次操作中，你可以在 arr 的任意位置插入任一整数。比方说，如果 arr = [1,4,1,2] ，那么你可以在中间添加 3 得到 [1,4,3,1,2] 。你可以在数组最开始或最后面添加整数。
+
+请你返回 最少 操作次数，使得 target 成为 arr 的一个子序列。
+
+一个数组的 子序列 指的是删除原数组的某些元素（可能一个元素都不删除），同时不改变其余元素的相对顺序得到的数组。比方说，[2,7,4] 是 [4,2,3,7,2,1,4] 的子序列（加粗元素），但 [2,4,2] 不是子序列。
+
+来源：力扣（LeetCode）
+
+##### 题目思路：
+
+由于可以在arr数组中任意位置插入任一整数，因此该题目题意是寻找两个数组的最长公共子序列的长度，需要插入的次数是target数组长度-最长公共子序列的长度。由于target数组中各个元素互不相同，可以用一个hash_map来存储各个元素位置信息（相对顺序），arr数组转换为相对顺序vector后的最长上升子序列长度。最大上升子序列长度可参考[官方解答](https://leetcode-cn.com/problems/longest-increasing-subsequence/solution/zui-chang-shang-sheng-zi-xu-lie-by-leetcode-soluti/)
+
+##### 代码：
+
+```c++
+int lengthofLIS(vector<int>& nums) {
+    int len = 1, n = (int)nums.size();
+    if (n == 0) {
+        return 0;
+    }
+    vector<int> d(n + 1, 0);
+    d[len] = nums[0];
+    for (int i = 1; i < n; ++i) {
+        if (nums[i] > d[len]) {
+            d[++len] = nums[i];
+        } else {
+            int l = 1, r = len, pos = 0;
+            while (l <= r) {
+                int mid = (l + r) >> 1;
+                if (d[mid] < nums[i]) {
+                    pos = mid;
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+            d[pos + 1] = nums[i];
+        }
+    }
+    return len;
+}
+int minOperations(vector<int>& target, vector<int>& arr) {
+    unordered_map<int,int> _map;
+    int length=target.size();
+    for(int i{0};i<length;++i){_map[target[i]]=i;};
+    vector<int> seq;
+    //建立顺序的vector
+    for(auto i:arr){
+        if(_map.find(i)!=_map.end()) seq.push_back(_map[i]);
+    }
+    return length-lengthofLIS(seq);
 }
 ```
 

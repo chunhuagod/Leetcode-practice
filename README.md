@@ -1,4 +1,4 @@
-# Leetcode-practice
+# Leetcode 100Top-like
 
 ## LRU缓存
 
@@ -682,6 +682,86 @@ vector<int> productExceptSelf(vector<int>& nums) {
         res[j]*=R;
     }
     return res;
+}
+```
+
+## 附.周赛记录
+
+### 周赛222场
+
+#### 第一题：[卡车上的最大单元数](https://leetcode-cn.com/problems/maximum-units-on-a-truck/)
+
+##### 题目描述：
+
+ 请你将一些箱子装在 一辆卡车 上。给你一个二维数组 boxTypes ，其中 boxTypes[i] = [numberOfBoxesi, numberOfUnitsPerBoxi] ：
+
+numberOfBoxesi 是类型 i 的箱子的数量。
+numberOfUnitsPerBoxi 是类型 i 每个箱子可以装载的单元数量。
+整数 truckSize 表示卡车上可以装载 箱子 的 最大数量 。只要箱子数量不超过 truckSize ，你就可以选择任意箱子装到卡车上。
+
+返回卡车可以装载 单元 的 最大 总数。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/maximum-units-on-a-truck
+
+##### 题目思路：
+
+按照二维数组第二列进行降序排列，然后尽可能选择前方的箱子即可
+
+##### 代码：
+
+```c++
+int maximumUnits(vector<vector<int>>& boxTypes, int truckSize) {
+    sort(boxTypes.begin(),boxTypes.end(),[](const vector<int>& L, const vector<int>& R){return L[1] > R[1];});
+    int res=0,n=0,length=boxTypes.size();
+    for (int i=0;i<length && truckSize>0;i++) {
+        n=min(truckSize,boxTypes[i][0]);
+        truckSize-=n;
+        res+=n*boxTypes[i][1];
+    }
+    return res;
+}
+```
+
+#### 第二题：[大餐计数](https://leetcode-cn.com/problems/count-good-meals/)
+
+##### 题目描述：
+
+大餐 是指 恰好包含两道不同餐品 的一餐，其美味程度之和等于 2 的幂。
+
+你可以搭配 任意 两道餐品做一顿大餐。
+
+给你一个整数数组 deliciousness ，其中 deliciousness[i] 是第 i 道餐品的美味程度，返回你可以用数组中的餐品做出的不同 大餐 的数量。结果需要对 109 + 7 取余。
+
+注意，只要餐品下标不同，就可以认为是不同的餐品，即便它们的美味程度相同。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/count-good-meals
+
+##### 题目思路：
+
+暴力法，判断任意两个组合是否能满足，但是超时。使用hash_map 记录所有菜品美味程度，然后利用该hash_map进行菜品查找。由于题目中对幂次进行了限制，可以由有限次穷举与该菜品互补成为2次幂的菜品，查找map即可
+
+##### 代码：
+
+```c++
+int countPairs(vector<int>& deliciousness) {
+    const int MOD = 1e9 + 7;
+    unordered_map<int,int> memo;
+    int ans = 0;
+    for (int i = 0;i < deliciousness.size();++i){
+        for (int j = 0;j < 22;++j){
+            int target = pow(2,j);
+            if (target - deliciousness[i] < 0) continue;
+            if (memo.count(target - deliciousness[i])){
+                ans += memo[target - deliciousness[i]];
+                ans%=MOD;
+            }
+        }
+        ++memo[deliciousness[i]];
+    }
+    ans %= MOD;
+    return ans;
 }
 ```
 

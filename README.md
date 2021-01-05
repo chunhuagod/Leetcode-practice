@@ -638,6 +638,64 @@ int coinChange(vector<int>& coins, int amount) {
 }
 ```
 
+#### 题目：[最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+
+##### 题目描述：
+
+给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。
+
+子序列是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7] 是数组 [0,3,1,6,2,2,7] 的子序列。
+
+来源：力扣（LeetCode）
+
+##### 题目思路:
+
+动态规划方法：利用Vector[i]记录nums数组下标从0至i的递增子序列长度，对于vector[i+1]而言，若nums[index] < nums[i+1]条件下，且index属于[0,i]，则vector[i+1]至少为vector[index]+1，遍历完选择最大的即可
+
+二分动态规划方法：上述动态规划方法复杂度为O(N^2)，由于存在该缺点：若递增子序列长度相同，仅需遍历该子序列长度下最小的尾端值即可。因此通过设计一个vector来记录不同递增子序列长度下最小的尾端值，同时该vector是一个单调序列，因此可以通过二分查找的方法来查找合适的位置进行更换或者插入尾端。该vector一定是个单调的，因为插入尾端元素的情况是大于vector中所有元素，更换元素的情况会更换vec[target-1]<vec[index]<=vec[target] target下标处的值，还是会维持该单调性。
+
+##### 代码：
+
+动态规划方法：
+
+```c++
+int lengthOfLIS(vector<int>& nums) {
+    int length=nums.size();
+    vector<int> pre(length,1); //保存遍历过的递增子序列信息
+    int res=1;
+    pre[0]=1;
+    for(int i{1};i<length;++i){
+        for(int j{0};j<i;++j){
+            if(nums[j]<nums[i] && pre[j]+1>pre[i]) pre[i]=pre[j]+1;
+        }
+        res=max(pre[i],res);
+    }
+    return res;
+}
+```
+
+二分动态规划方法：
+
+```c++
+int lengthOfLIS(vector<int>& nums) {
+    int length=nums.size();
+    vector<int> LIS{nums[0]};
+    for(int i{1};i<length;++i){
+        int L=0,R=LIS.size()-1;
+        while(L<=R){
+            int mid=(L+R)/2;
+            if(LIS[mid]>nums[i]) R=mid-1;
+            else if(LIS[mid]<nums[i]) L=mid+1;
+            else {L=R=mid;break;}
+        }
+        L=max(L,R);
+        if(L<LIS.size()) LIS[L]=nums[i];
+        else LIS.push_back(nums[i]);
+    }
+    return LIS.size();
+}
+```
+
 
 
 ## 数组

@@ -384,6 +384,75 @@ else return nullptr;
 }
 ```
 
+#### 题目：[合并K个升序链表](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+
+##### 题目描述：
+
+给你一个链表数组，每个链表都已经按升序排列。
+
+请你将所有链表合并到一个升序链表中，返回合并后的链表。
+
+##### 题目思路：
+
+利用分治的思想，将其分而治之，利用合并2个上升链表进行合并
+
+##### 代码：
+
+```c++
+ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+    if (l1 == nullptr) {
+        return l2;
+    } else if (l2 == nullptr) {
+        return l1;
+    } else if (l1->val < l2->val) {
+        l1->next = mergeTwoLists(l1->next, l2);
+        return l1;
+    } else {
+        l2->next = mergeTwoLists(l1, l2->next);
+        return l2;
+    }
+}
+ListNode* mergeKLists(vector<ListNode*>& lists) {
+    int length=lists.size();
+    if (length==0) return nullptr;
+    if (length==1) return lists[0];
+    vector<ListNode*> pre_list(lists.begin(),lists.begin()+length/2);
+    vector<ListNode*> last_list(lists.begin()+length/2,lists.end());
+    ListNode* pre=mergeKLists(pre_list);
+    ListNode* last=mergeKLists(last_list);
+    ListNode* head =mergeTwoLists(pre,last);
+    return head;
+}
+```
+
+#### 题目：[合并两个有序链表](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+
+##### 题目描述：
+
+ 将两个升序链表合并为一个新的 **升序** 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。  
+
+##### 题目思路：
+
+利用递归的思想，通过val值不断递归
+
+##### 题目代码：
+
+```c++
+ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+    if (l1 == nullptr) {
+        return l2;
+    } else if (l2 == nullptr) {
+        return l1;
+    } else if (l1->val < l2->val) {
+        l1->next = mergeTwoLists(l1->next, l2);
+        return l1;
+    } else {
+        l2->next = mergeTwoLists(l1, l2->next);
+        return l2;
+    }
+}
+```
+
 
 
 ### 环形链表

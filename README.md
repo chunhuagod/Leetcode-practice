@@ -1,6 +1,46 @@
 # Leetcode 100Top-like
 
-## LRU缓存
+## 字符串
+
+#### 题目：[有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)
+
+##### 题目描述：
+
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+
+有效字符串需满足：
+
+左括号必须用相同类型的右括号闭合。
+左括号必须以正确的顺序闭合。
+注意空字符串可被认为是有效字符串。
+
+来源：力扣（LeetCode）
+
+##### 题目思路：
+
+利用stack存储新来字符为 '('，'{'，'['情况，对其他的字符进行匹配判断，不匹配则为false，若为有效的括号，最终栈应该为空
+
+##### 代码：
+
+```c++
+bool isValid(string s) {
+    stack<char> _stack;
+    int length=s.size();
+    for(int i{0};i<length;++i){
+        if(s[i]=='(' || s[i]=='{' || s[i]=='[') {_stack.push(s[i]);continue;}
+        if(_stack.empty()) return false;
+        if((s[i]==')' && _stack.top()=='(') || (s[i]=='}' && _stack.top()=='{') ||(s[i]==']' && _stack.top()=='[')) {
+            _stack.pop();continue;
+        }
+        return false;
+    }
+    return _stack.empty();
+}
+```
+
+
+
+### LRU缓存
 
 ### 使用哈希表和双向链表实现 利用哈希表查找复杂度和链表的添加删除复杂度
 
@@ -495,7 +535,7 @@ public:
 
 
 
-## 两数相加
+#### 题目：两数相加
 
 ```c++
 class Solution {

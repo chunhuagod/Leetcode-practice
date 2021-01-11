@@ -773,7 +773,32 @@ bool isValidBST(TreeNode* root) {
 }
 ```
 
+#### 题目：[不同的二叉搜索树](https://leetcode-cn.com/problems/unique-binary-search-trees/)
 
+##### 题目描述：
+
+ 给定一个整数 *n*，求以 1 ... *n* 为节点组成的二叉搜索树有多少种？ 
+
+##### 题目思路：
+
+基于动态规划的思想，以不同点i作为根节点时，其种类为f(i-1)*f(n-i)种情况
+
+##### 题目代码：
+
+```c++
+int numTrees(int n) {
+    vector<int> vec(n,0);
+    vec[0]=1;
+    if(n==1) return vec[0];
+    for(int i=1;i<n;++i){
+        vec[i]+=2*vec[i-1];
+        for(int j=1;j<=i-1;++j){
+            vec[i]+=vec[j-1]*vec[i-j-1];
+        }
+    }
+    return vec[n-1];
+}
+```
 
 ## 动态规划
 
@@ -894,6 +919,39 @@ int lengthOfLIS(vector<int>& nums) {
         else LIS.push_back(nums[i]);
     }
     return LIS.size();
+}
+```
+
+#### 题目： [最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
+
+##### 题目描述：
+
+给定一个包含非负整数的 `*m* x *n*` 网格 `grid` ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+
+**说明：**每次只能向下或者向右移动一步。
+
+##### 题目思路：
+
+基于动态规划的思想求解，d(i)(j)=min(d(i-1)(j)+d((i)(j-1)))+grid(i)(j)，寻找每个点最小路径
+
+##### 代码：
+
+```c++
+int minPathSum(vector<vector<int>>& grid) {
+    int h=grid.size();
+    int w=grid[0].size();
+    vector<int> vec(w,0);
+    for(int j=0;j<w;++j){
+        if(j-1<0) vec[j]=grid[0][j];
+        else vec[j]= grid[0][j]+vec[j-1];
+    }
+    for(int i=1;i<h;++i){
+        for(int j=0;j<w;++j){
+            if(j-1<0) vec[j]=vec[j]+grid[i][j];
+            else vec[j]=min(vec[j],vec[j-1])+grid[i][j];
+        }
+    }
+    return vec[w-1];
 }
 ```
 

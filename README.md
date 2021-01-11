@@ -721,6 +721,60 @@ public:
 };
 ```
 
+#### 题目：[验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+
+##### 题目描述：
+
+给定一个二叉树，判断其是否是一个有效的二叉搜索树。
+
+假设一个二叉搜索树具有如下特征：
+
+节点的左子树只包含小于当前节点的数。
+节点的右子树只包含大于当前节点的数。
+所有左子树和右子树自身必须也是二叉搜索树。
+
+来源：力扣（LeetCode）
+
+##### 题目思路：
+
+思路通过二叉搜索树的基本性质，进行前序遍历所得的序列应为单调递增的。下方代码一为先通过前序遍历得到该序列进行判断，代码二为保存前序中最大的值，每次遍历的过程中进行判断。
+
+##### 题目代码：
+
+```c++
+void inorder_t(TreeNode* root,vector<int>& vec){
+    if(root->left) {inorder_t(root->left,vec);}
+    vec.push_back(root->val);
+    if(root->right) {inorder_t(root->right,vec);}
+}
+bool isValidBST(TreeNode* root) {
+    vector<int> _vec;
+    inorder_t(root,_vec);
+    int length=_vec.size();
+    if (length==1) return true;
+    for(int i{1};i<length;++i){
+        if(_vec[i-1]<_vec[i]) continue;
+        return false;
+    }
+    return true;
+}
+```
+
+
+
+```c++
+long temp_max=LONG_MIN;
+bool isValidBST(TreeNode* root) {
+    if(root==nullptr) return true;
+    if(!isValidBST(root->left)) return false;
+    if(root->val<=temp_max) return false;
+    temp_max=root->val;
+    return isValidBST(root->right);
+}
+```
+
+
+
 ## 动态规划
 
 #### 题目：[最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)

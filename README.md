@@ -1060,6 +1060,62 @@ vector<int> productExceptSelf(vector<int>& nums) {
 }
 ```
 
+## 位操作
+
+#### 题目：[只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
+
+##### 题目描述：
+
+给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+说明：
+
+你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+
+来源：力扣（LeetCode）
+
+##### 题目思路：
+
+由于不能使用额外空间，若仅限于线性时间复杂度要求下，利用hashmap来实现可以满足。因此只能利用固有的性质来解题，由于存在两项相同的，相同两个数字异或为0，异或满足交换律，0与任何数异或为其本身，因此直接利用异或符进行遍历即可。
+
+##### 代码：
+
+```c++
+int singleNumber(vector<int>& nums) {
+    int res=0; 
+    for(auto num:nums) res^=num;
+    return res;
+}
+```
+
+#### 题目：[汉明距离](https://leetcode-cn.com/problems/hamming-distance/)
+
+##### 题目描述：
+
+两个整数之间的[汉明距离](https://baike.baidu.com/item/汉明距离)指的是这两个数字对应二进制位不同的位置的数目。
+
+给出两个整数 `x` 和 `y`，计算它们之间的汉明距离。
+
+##### 题目思路：
+
+进行异或，仅位不同的会置为bit1，因此问题转换为求一个整数中bit1的个数。这里介绍布赖恩·克尼根算法来统计bit1个数，num&(num-1) 会移除等于 1 的最右比特位。 
+
+##### 代码：
+
+```c++
+int hammingDistance(int x, int y) {
+    unsigned temp=x^y;
+    int res=0;
+    while(temp){
+        temp=temp&(temp-1);
+        ++res;
+    }
+    return res;
+}
+```
+
+
+
 ## 附.周赛记录
 
 ### 周赛222场

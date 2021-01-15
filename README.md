@@ -858,6 +858,43 @@ int numTrees(int n) {
 }
 ```
 
+#### 题目：[从前序与中序遍历序列构造二叉树](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+
+##### 题目描述：
+
+根据一棵树的前序遍历与中序遍历构造二叉树。
+
+**注意:**
+你可以假设树中没有重复的元素。
+
+##### 题目思路：
+
+通过递归的方法实现，preorder根节点是第一个元素，inorder该对应元素（根节点）的左边所有元素为该左子树的中序遍历，右边所有元素为该右子树的中序遍历。利用该特性再次迭代左子树，右子树即可。
+
+##### 题目代码：
+
+```c++
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+    if(preorder.empty()) return nullptr;
+    return buildTree_p(preorder,inorder,0,preorder.size()-1,0,preorder.size()-1);
+}
+TreeNode* buildTree_p(vector<int>& preorder, vector<int>& inorder,int l,int r,int ll,int rr) {
+    if(l>r) return nullptr;
+    TreeNode* root=new TreeNode(preorder[l]);
+    int index=ll;
+    for(;index<=rr;++index){
+        if(inorder[index]==preorder[l]){
+            break;
+        }
+    }
+    root->left=buildTree_p(preorder,inorder,l+1,r+index+1-rr-1,ll,index-1);
+    root->right=buildTree_p(preorder,inorder,r+index+1-rr,r,index+1,rr);
+    return root;
+}
+```
+
+
+
 ## 动态规划
 
 #### 题目：[最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)

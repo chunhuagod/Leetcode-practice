@@ -423,44 +423,6 @@ public:
 };
 ```
 
-## 数组
-
-### 数组操作
-
-#### 题目：[旋转图像](https://leetcode-cn.com/problems/rotate-image/)
-
-##### 题目描述：
-
-给定一个 n × n 的二维矩阵表示一个图像。
-
-将图像顺时针旋转 90 度。
-
-说明：
-
-你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像。
-
-来源：力扣（LeetCode）
-
-##### 题目思路：
-
-对外层进行90°旋转，然后从外层遍历至内层
-
-##### 代码：
-
-```c++
-void rotate(vector<vector<int>>& matrix) {
-    int n=matrix[0].size();
-    for (int h{0};h<n/2;++h){
-        for(int w=h;w<n-1-h;++w){
-            for(int i=0;i<3;++i){
-                if(i==0) swap(matrix[h][w],matrix[w][n-1-h]);
-                else if(i==1) swap(matrix[h][w],matrix[n-1-h][n-1-w]);
-                else swap(matrix[h][w],matrix[n-1-w][h]);}
-        }
-    }
-}
-```
-
 
 
 ## 链表
@@ -1055,6 +1017,42 @@ int minPathSum(vector<vector<int>>& grid) {
 
 
 ## 数组
+
+#### 题目：[旋转图像](https://leetcode-cn.com/problems/rotate-image/)
+
+##### 题目描述：
+
+给定一个 n × n 的二维矩阵表示一个图像。
+
+将图像顺时针旋转 90 度。
+
+说明：
+
+你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像。
+
+来源：力扣（LeetCode）
+
+##### 题目思路：
+
+对外层进行90°旋转，然后从外层遍历至内层
+
+##### 代码：
+
+```c++
+void rotate(vector<vector<int>>& matrix) {
+    int n=matrix[0].size();
+    for (int h{0};h<n/2;++h){
+        for(int w=h;w<n-1-h;++w){
+            for(int i=0;i<3;++i){
+                if(i==0) swap(matrix[h][w],matrix[w][n-1-h]);
+                else if(i==1) swap(matrix[h][w],matrix[n-1-h][n-1-w]);
+                else swap(matrix[h][w],matrix[n-1-w][h]);}
+        }
+    }
+}
+```
+
+
 
 #### 题目：[和为K的子数组](https://leetcode-cn.com/problems/subarray-sum-equals-k/)
 

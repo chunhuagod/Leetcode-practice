@@ -1,3 +1,5 @@
+
+
 # Leetcode 100Top-like
 
 ## 字符串
@@ -1053,6 +1055,65 @@ int minPathSum(vector<vector<int>>& grid) {
 
 
 ## 数组
+
+#### 题目：[和为K的子数组](https://leetcode-cn.com/problems/subarray-sum-equals-k/)
+
+##### 题目描述：
+
+ 给定一个整数数组和一个整数 **k，**你需要找到该数组中和为 **k** 的连续的子数组的个数。 
+
+##### 题目思路：
+
+由于连续子数组，Sum(i,j)从index i至j求和为k，Sum(i,j)=Sum(0,j)-Sum(0,i-1)，因此第一步需要记录累加和Sum(0,j)，第二部就是查找满足的Sum(0,i-1)=Sum(0,j)-k的数量
+
+代码一利用vector来记录累计和，通过遍历j以前所有累加和来计算数量，简单直接，但是复杂度超过了要求
+
+代码二利用hash_map来记录是否出现过满足要求Sum(0,j)-k键值的情况，并且value值存储满足的情况数量
+
+##### 代码：
+
+```c++
+int subarraySum(vector<int>& nums, int k) {
+    int length=nums.size()+1;
+    vector<int> vec(length,0);
+    int i=0;
+
+    //sumation
+    for(auto num:nums){
+        vec[i+1]+=vec[i]+num;
+        ++i;
+    }
+
+    int res=0;
+    for(int index{1};index<length;++index){
+        for(int i{0};i<index;++i){
+            if(vec[index]-vec[i]==k) ++res;
+        }
+    }
+
+    return res;
+}
+```
+
+```c++
+int subarraySum(vector<int>& nums, int k) {
+    unordered_map<int,int> m;
+    m[0]=1;
+
+    int res=0;
+    int sum=0;
+
+    for(const auto& num:nums){
+        sum+=num;
+        if(m.find(sum-k)!=m.end()) {res+=m[sum-k];}
+        m[sum]+=1;
+    }
+
+    return res;
+}
+```
+
+
 
 #### 题目：[ 除自身以外数组的乘积](https://leetcode-cn.com/problems/product-of-array-except-self/)
 
